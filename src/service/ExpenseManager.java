@@ -15,7 +15,11 @@ public class ExpenseManager {
 
         storage = new FileStorage();
 
-        expenses = new ArrayList<>();
+//        expenses = new ArrayList<>(); // this points to the new list , which we don't want
+
+        expenses = storage.loadExpenses(); // it points to the list that has been just returned by loadExpenses()
+
+        System.out.println("Loaded expenses: " + expenses.size());
     }
 
     // Add a new expense
