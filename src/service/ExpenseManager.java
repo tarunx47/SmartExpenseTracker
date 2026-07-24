@@ -15,11 +15,8 @@ public class ExpenseManager {
 
         storage = new FileStorage();
 
-//        expenses = new ArrayList<>(); // this points to the new list , which we don't want
-
         expenses = storage.loadExpenses(); // it points to the list that has been just returned by loadExpenses()
 
-        System.out.println("Loaded expenses: " + expenses.size());
     }
 
     // Add a new expense
@@ -33,5 +30,32 @@ public class ExpenseManager {
     // Return all expenses
     public List<Expense> getAllExpenses() {
         return expenses;
+    }
+    public int getTotalExpenses() {
+        return getAllExpenses().size();
+    }
+
+    public double getTotalAmount() {
+
+        double total = 0;
+
+        for (Expense expense : getAllExpenses()) {
+            total += expense.getAmount();
+        }
+
+        return total;
+    }
+
+    public boolean deleteExpenseByIndex(int index) {
+
+        if (index < 0 || index >= expenses.size()) {
+            return false;
+        }
+
+        expenses.remove(index);
+
+        storage.saveExpenses(expenses);
+
+        return true;
     }
 }
