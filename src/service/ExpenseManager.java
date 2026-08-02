@@ -3,6 +3,7 @@ package service;
 import model.Expense;
 import storage.FileStorage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,5 +58,41 @@ public class ExpenseManager {
         storage.saveExpenses(expenses);
 
         return true;
+    }
+
+    public boolean updateExpense(int index,
+                                 double amount,
+                                 String category,
+                                 String description) {
+
+        if (index < 0 || index >= expenses.size()) {
+            return false;
+        }
+
+        Expense expense = expenses.get(index);
+
+        expense.setAmount(amount);
+        expense.setCategory(category);
+        expense.setDescription(description);
+
+        storage.saveExpenses(expenses);
+
+        return true;
+    }
+
+    public List<Expense> searchByCategory(String category) {
+
+        return expenses.stream()
+                .filter(expense ->
+                        expense.getCategory().equalsIgnoreCase(category))
+                .toList();
+    }
+
+    public List<Expense> searchByDate(LocalDate date) {
+
+        return expenses.stream()
+                .filter(expense ->
+                        expense.getDate().equals(date))
+                .toList();
     }
 }
