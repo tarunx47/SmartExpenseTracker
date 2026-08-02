@@ -11,7 +11,7 @@ public class Expense {
     private LocalDate date;
 
     public Expense(UUID id, double amount, String category, String description, LocalDate date) {
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.amount = amount;
         this.category = category;
         this.description = description;
