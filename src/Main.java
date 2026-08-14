@@ -3,6 +3,7 @@ import service.ExpenseManager;
 import ui.ConsoleUI;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -23,6 +24,10 @@ public class Main {
             System.out.println("3. Delete Expense");
             System.out.println("4. Edit Expense");
             System.out.println("5. Search Expenses");
+            System.out.println("6. Sort Expenses");
+            System.out.println("7. Statistics");
+            System.out.println("8. Monthly Summary");
+            System.out.println("9. Export Report");
             System.out.println("0. Exit");
 
             ConsoleUI.line();
@@ -228,6 +233,84 @@ public class Main {
                         }
 
                         default -> ConsoleUI.error("Invalid option.");
+                    }
+                }
+                case 6 -> {
+
+                    ConsoleUI.section("SORT EXPENSES");
+
+                    System.out.println("1. Amount (Low -> High)");
+                    System.out.println("2. Amount (High -> Low)");
+                    System.out.println("3. Date (Oldest -> Newest)");
+                    System.out.println("4. Date (Newest -> Oldest)");
+                    System.out.println("5. Category (A -> Z)");
+                    System.out.println("Choose option: ");
+
+                    int option = sc.nextInt();
+                    sc.nextLine();
+
+                    manager.sortExpenses(option);
+
+                    ConsoleUI.success("Expenses sorted successfully.");
+
+                    ConsoleUI.displayExpenses(manager.getAllExpenses());
+                }
+                case 7 -> {
+
+                    ConsoleUI.section("EXPENSE STATISTICS");
+
+                    System.out.printf("Total Expenses  : %d%n", manager.getTotalExpenses());
+                    System.out.printf("Total Amount    : $%.2f%n", manager.getTotalAmount());
+                    System.out.printf("Highest Expense : $%.2f%n", manager.getHighestExpense());
+                    System.out.printf("Lowest Expense  : $%.2f%n", manager.getLowestExpense());
+                    System.out.printf("Average Expense : $%.2f%n", manager.getAverageExpense());
+
+                    ConsoleUI.line();
+                }
+                case 8 -> {
+
+                    ConsoleUI.section("MONTHLY SUMMARY");
+
+                    System.out.println("Enter year : ");
+                    int year = sc.nextInt();
+
+                    System.out.println("Enter month (1-12): ");
+                    int month = sc.nextInt();
+                    sc.nextLine();
+
+                    Map<String, Double> summary = manager.getMonthlySummary(year, month);
+
+                    if (summary.isEmpty()) {
+                        ConsoleUI.error("No expenses found.");
+                        break;
+                    }
+
+                    double total = 0;
+
+                    for (Map.Entry<String, Double> entry : summary.entrySet()) {
+
+                        System.out.printf("%-15s $%.2f%n",
+                                entry.getKey(),
+                                entry.getValue());
+
+                        total += entry.getValue();
+                    }
+
+                    ConsoleUI.line();
+                    System.out.printf("Total          $%.2f%n", total);
+                }
+
+                case 9 -> {
+
+                    ConsoleUI.section("EXPORT REPORT");
+
+                    boolean exported = manager.exportReport();
+
+                    if (exported) {
+                        ConsoleUI.success("Report exported successfully.");
+                        System.out.println("File: expense-report.txt");
+                    } else {
+                        ConsoleUI.error("Failed to export report.");
                     }
                 }
                 case 0 -> {
